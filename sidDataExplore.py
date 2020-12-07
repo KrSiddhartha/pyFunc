@@ -1,16 +1,3 @@
-from matplotlib import pyplot as plt
-from matplotlib.pyplot import figure
-import seaborn as sns
-
-import pandas as pd
-import numpy as np
-
-from statsmodels.stats.outliers_influence import variance_inflation_factor
-
-import scipy.stats as stats
-
-
-
 class printFormat:
     PURPLE = '\033[95m'
     CYAN = '\033[96m'
