@@ -1,3 +1,14 @@
+from matplotlib import pyplot as plt
+from matplotlib.pyplot import figure
+import seaborn as sns
+
+import pandas as pd
+import numpy as np
+
+from statsmodels.stats.outliers_influence import variance_inflation_factor
+
+import scipy.stats as stats
+
 class printFormat:
     PURPLE = '\033[95m'
     CYAN = '\033[96m'
@@ -99,7 +110,7 @@ def outlierIdenti(var_):
     return [q1,q3,iqr,lower_whisker,upper_whisker]
 
 
-def outlierTreatOptions(df, treatMethodPrint=""):
+def outlierTreatOptions(df, colName='', treatMethodPrint=""):
     df2 = df.copy()
     df2[colName] = np.where(df2[colName] <df2[colName].quantile(0.1), df2[colName].quantile(0.1),df2[colName])
     df2[colName] = np.where(df2[colName] >df2[colName].quantile(0.9), df2[colName].quantile(0.9),df2[colName])
@@ -139,6 +150,7 @@ def outlierTreatOptions(df, treatMethodPrint=""):
 
 def variableProfile(df, colName, varType="cat", outlierChk=True):
     df = df.copy()
+    
     if(varType=="num"):
         print(df[colName].describe(), end="\n\n")
         
@@ -177,20 +189,15 @@ def variableProfile(df, colName, varType="cat", outlierChk=True):
                 print(colName + " Count of observations over upper outlier threshold = " + str(round(upperOutCnt,3)), end="\n\n")
                 print(colName + " Upper of observations over upper outlier threshold = " + str(round((upperOutCnt/df.shape[0])*100, 2)), end="\n\n\n\n")
                 
-                outlierTreatOptions(df, "Quantile-based Flooring and Capping")
-                outlierTreatOptions(df, "median")
-                outlierTreatOptions(df, "mean")
+                outlierTreatOptions(df, colName, "Quantile-based Flooring and Capping")
+                outlierTreatOptions(df, colName, "median")
+                outlierTreatOptions(df, colName, "mean")
             else:
                 print(printFormat.GREEN + "No outliers present in " + colName + printFormat.END, end="\n\n")
 
         
     if(varType=="cat"):
-        distTab = pd.merge(pd.dfaFrame(df[colName].value_counts()).reset_index(),
-         pd.dfaFrame(df[colName].value_counts("normalise")*100).reset_index(),
-         on="index")
-        distTab.columns = [colName, "Frequency", "Percentage"]
-        print(distTab, end="\n\n")
-        
+        print(freqTab(df, colName), end="\n\n")
         plt.figure(figsize= (15,7))
         plt.subplot(1,1,1)
         plt.hist(df[colName], color='lightblue', edgecolor = 'black', alpha = 0.7)
