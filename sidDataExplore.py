@@ -1,5 +1,3 @@
-%matplotlib inline 
-
 from matplotlib import pyplot as plt
 from matplotlib.pyplot import figure
 import seaborn as sns
