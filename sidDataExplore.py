@@ -1,3 +1,16 @@
+from matplotlib import pyplot as plt
+from matplotlib.pyplot import figure
+import seaborn as sns
+
+import pandas as pd
+import numpy as np
+
+from statsmodels.stats.outliers_influence import variance_inflation_factor
+
+import scipy.stats as stats
+
+
+
 class printFormat:
     PURPLE = '\033[95m'
     CYAN = '\033[96m'
@@ -9,7 +22,7 @@ class printFormat:
     BOLD = '\033[1m'
     UNDERLINE = '\033[4m'
     END = '\033[0m'
-	
+
 
 def freqTab(df, colName):
     freqC = pd.DataFrame(dat.cement.value_counts())
@@ -24,6 +37,7 @@ def freqTab(df, colName):
     
     return freqT
 
+
 def calc_vif(X):
     vif = pd.DataFrame()
     vif["variables"] = X.columns
@@ -31,10 +45,12 @@ def calc_vif(X):
 
     return(vif)
 
+
 def clusterAnalysisPlt(df, target):
     for var in df.drop([target,"GROUP"], axis=1).columns:
         plot = sns.lmplot(var,target,data=concat_data,hue='GROUP')
         plot.set(ylim = (-3,3))
+
 
 def corrPlot(df):
     correlation = df.corr()
@@ -48,6 +64,7 @@ def corrPlot(df):
                 square=True, linewidths=.5, cbar_kws={"shrink": .5}, annot=True)
 
     plt.show()
+
 
 def modelComplexityPlt(degree_Min,degree_Max,rmse_test,rmse_train,test_Score,train_Score):
     dfRMSE=pd.DataFrame({'Degree': range(degree_Min,degree_Max+1),
@@ -84,6 +101,7 @@ def modelComplexityPlt(degree_Min,degree_Max,rmse_test,rmse_train,test_Score,tra
         plt.xlabel("Degree Polynomial")
         plt.ylabel("R^2 for Model")
 
+
 def outlierIdenti(var_):
     q1=var_.quantile(0.25)
     q3=var_.quantile(0.75)
@@ -92,6 +110,7 @@ def outlierIdenti(var_):
     upper_whisker = q3+1.5*iqr
     
     return [q1,q3,iqr,lower_whisker,upper_whisker]
+
 
 def outlierTreatOptions(df, treatMethodPrint=""):
     df2 = df.copy()
@@ -129,6 +148,7 @@ def outlierTreatOptions(df, treatMethodPrint=""):
     print(colName + " Skewness = " + str(round(stats.skew(df2[colName][pd.notnull(df2[colName])]), 3)), end="\n\n\n\n")
 
     plt.show()
+
 
 def variableProfile(df, colName, varType="cat", outlierChk=True):
     df = df.copy()
